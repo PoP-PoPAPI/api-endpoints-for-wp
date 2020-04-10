@@ -1,8 +1,8 @@
 <?php
 namespace PoP\APIEndpointsForWP;
 
-class EndpointUtils {
-
+class EndpointUtils
+{
     /**
      * Indicate if the URI ends with the given endpoint
      *

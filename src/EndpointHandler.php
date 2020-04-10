@@ -2,11 +2,9 @@
 namespace PoP\APIEndpointsForWP;
 
 use PoP\APIEndpointsForWP\EndpointUtils;
-use PoP\RESTAPI\DataStructureFormatters\RESTDataStructureFormatter;
-use PoP\GraphQLAPI\DataStructureFormatters\GraphQLDataStructureFormatter;
 
-class EndpointHandler {
-
+class EndpointHandler
+{
     /**
      * GraphQL endpoint
      *
@@ -107,22 +105,24 @@ class EndpointHandler {
      *
      * @return void
      */
-    protected function setDoingGraphQL(): void
+    private function setDoingGraphQL(): void
     {
         // Set the params on the request, to emulate that they were added by the user
         $this->setDoingAPI();
-        $_REQUEST[\GD_URLPARAM_DATASTRUCTURE] = GraphQLDataStructureFormatter::getName();
+        // Include qualified namespace here (instead of `use`) since we do didn't know if component is installed
+        $_REQUEST[\GD_URLPARAM_DATASTRUCTURE] = \PoP\GraphQLAPI\DataStructureFormatters\GraphQLDataStructureFormatter::getName();
     }
     /**
      * Indicate this is a REST request
      *
      * @return void
      */
-    protected function setDoingREST(): void
+    private function setDoingREST(): void
     {
         // Set the params on the request, to emulate that they were added by the user
         $this->setDoingAPI();
-        $_REQUEST[\GD_URLPARAM_DATASTRUCTURE] = RESTDataStructureFormatter::getName();
+        // Include qualified namespace here (instead of `use`) since we do didn't know if component is installed
+        $_REQUEST[\GD_URLPARAM_DATASTRUCTURE] = \PoP\RESTAPI\DataStructureFormatters\RESTDataStructureFormatter::getName();
     }
 
     /**
