@@ -2,6 +2,7 @@
 namespace PoP\APIEndpointsForWP;
 
 use PoP\APIEndpointsForWP\EndpointUtils;
+use PoP\APIEndpointsForWP\ComponentConfiguration;
 
 class EndpointHandler
 {
@@ -10,33 +11,19 @@ class EndpointHandler
      *
      * @var string
      */
-    public $GRAPHQL_API_ENDPOINT;
+    protected $graphQLAPIEndpoint;
     /**
      * REST endpoint
      *
      * @var string
      */
-    public $REST_API_ENDPOINT;
+    protected $restAPIEndpoint;
     /**
      * Native API endpoint
      *
      * @var string
      */
-    public $NATIVE_API_ENDPOINT;
-
-    /**
-     * Hook to set the GraphQL endpoint
-     */
-    public const HOOK_GRAPHQL_API_ENDPOINT = __CLASS__.':graphql_api_endpoint';
-    /**
-     * Hook to set the REST endpoint
-     */
-    public const HOOK_REST_API_ENDPOINT = __CLASS__.':rest_api_endpoint';
-    /**
-     * Hook to set the API endpoint
-     */
-    public const HOOK_NATIVE_API_ENDPOINT = __CLASS__.':native_api_endpoint';
-
+    protected $nativeAPIEndpoint;
 
     /**
      * Initialize the endpoints
@@ -45,26 +32,14 @@ class EndpointHandler
      */
     public function init(): void
     {
-        /**
-         * Let the admin override the default endpoints through hooks
-         */
         if ($this->isGraphQLAPIEnabled()) {
-            $this->GRAPHQL_API_ENDPOINT = apply_filters(
-                self::HOOK_GRAPHQL_API_ENDPOINT,
-                'api/graphql'
-            );
+            $this->graphQLAPIEndpoint = ComponentConfiguration::getGraphQLAPIEndpoint();
         }
         if ($this->isRESTAPIEnabled()) {
-            $this->REST_API_ENDPOINT = apply_filters(
-                self::HOOK_REST_API_ENDPOINT,
-                'api/rest'
-            );
+            $this->restAPIEndpoint = ComponentConfiguration::getRESTAPIEndpoint();
         }
         if ($this->isNativeAPIEnabled()) {
-            $this->NATIVE_API_ENDPOINT = apply_filters(
-                self::HOOK_NATIVE_API_ENDPOINT,
-                'api'
-            );
+            $this->nativeAPIEndpoint = ComponentConfiguration::getNativeAPIEndpoint();
         }
 
         /**
@@ -88,6 +63,36 @@ class EndpointHandler
             'parse_request',
             [$this, 'parseRequest']
         );
+    }
+
+    /**
+     * Check if GrahQL has been enabled
+     *
+     * @return boolean
+     */
+    protected function isGraphQLAPIEnabled(): bool
+    {
+        return class_exists('\PoP\GraphQLAPI\Component') && \PoP\GraphQLAPI\Component::isEnabled();
+    }
+
+    /**
+     * Check if REST has been enabled
+     *
+     * @return boolean
+     */
+    protected function isRESTAPIEnabled(): bool
+    {
+        return class_exists('\PoP\RESTAPI\Component') && \PoP\RESTAPI\Component::isEnabled();
+    }
+
+    /**
+     * Check if the PoP API has been enabled
+     *
+     * @return boolean
+     */
+    protected function isNativeAPIEnabled(): bool
+    {
+        return class_exists('\PoP\API\Component') && \PoP\API\Component::isEnabled();
     }
 
     /**
@@ -126,36 +131,6 @@ class EndpointHandler
     }
 
     /**
-     * Check if GrahQL has been enabled
-     *
-     * @return boolean
-     */
-    protected function isGraphQLAPIEnabled(): bool
-    {
-        return class_exists('\PoP\GraphQLAPI\Component') && \PoP\GraphQLAPI\Component::isEnabled();
-    }
-
-    /**
-     * Check if GrahQL has been enabled
-     *
-     * @return boolean
-     */
-    protected function isRESTAPIEnabled(): bool
-    {
-        return class_exists('\PoP\RESTAPI\Component') && \PoP\RESTAPI\Component::isEnabled();
-    }
-
-    /**
-     * Check if the API has been enabled
-     *
-     * @return boolean
-     */
-    protected function isNativeAPIEnabled(): bool
-    {
-        return class_exists('\PoP\API\Component') && \PoP\API\Component::isEnabled();
-    }
-
-    /**
      * Process the request to find out if it is any of the endpoints
      *
      * @return void
@@ -164,11 +139,11 @@ class EndpointHandler
     {
         // Check if the URL ends with either /api/graphql/ or /api/rest/ or /api/
         $uri = EndpointUtils::getSlashedURI();
-        if ($this->isGraphQLAPIEnabled() && $this->doesEndpointEndWith($uri, $this->GRAPHQL_API_ENDPOINT)) {
+        if (!empty($this->graphQLAPIEndpoint) && $this->doesEndpointEndWith($uri, $this->graphQLAPIEndpoint)) {
             $this->setDoingGraphQL();
-        } elseif ($this->isRESTAPIEnabled() && $this->doesEndpointEndWith($uri, $this->REST_API_ENDPOINT)) {
+        } elseif (!empty($this->restAPIEndpoint) && $this->doesEndpointEndWith($uri, $this->restAPIEndpoint)) {
             $this->setDoingREST();
-        } elseif ($this->isNativeAPIEnabled() && $this->doesEndpointEndWith($uri, $this->NATIVE_API_ENDPOINT)) {
+        } elseif (!empty($this->nativeAPIEndpoint) && $this->doesEndpointEndWith($uri, $this->nativeAPIEndpoint)) {
             $this->setDoingAPI();
         }
     }
@@ -180,14 +155,14 @@ class EndpointHandler
      */
     public function addRewriteEndpoints()
     {
-        if ($this->isGraphQLAPIEnabled()) {
-            add_rewrite_endpoint($this->GRAPHQL_API_ENDPOINT, EP_ALL);
+        if (!empty($this->graphQLAPIEndpoint)) {
+            add_rewrite_endpoint($this->graphQLAPIEndpoint, EP_ALL);
         }
-        if ($this->isRESTAPIEnabled()) {
-            add_rewrite_endpoint($this->REST_API_ENDPOINT, EP_ALL);
+        if (!empty($this->restAPIEndpoint)) {
+            add_rewrite_endpoint($this->restAPIEndpoint, EP_ALL);
         }
-        if ($this->isNativeAPIEnabled()) {
-            add_rewrite_endpoint($this->NATIVE_API_ENDPOINT, EP_ALL);
+        if (!empty($this->nativeAPIEndpoint)) {
+            add_rewrite_endpoint($this->nativeAPIEndpoint, EP_ALL);
         }
     }
 
@@ -199,14 +174,14 @@ class EndpointHandler
      */
     public function addQueryVar($query_vars)
     {
-        if ($this->isGraphQLAPIEnabled()) {
-            $query_vars[] = $this->GRAPHQL_API_ENDPOINT;
+        if (!empty($this->graphQLAPIEndpoint)) {
+            $query_vars[] = $this->graphQLAPIEndpoint;
         }
-        if ($this->isRESTAPIEnabled()) {
-            $query_vars[] = $this->REST_API_ENDPOINT;
+        if (!empty($this->restAPIEndpoint)) {
+            $query_vars[] = $this->restAPIEndpoint;
         }
-        if ($this->isNativeAPIEnabled()) {
-            $query_vars[] = $this->NATIVE_API_ENDPOINT;
+        if (!empty($this->nativeAPIEndpoint)) {
+            $query_vars[] = $this->nativeAPIEndpoint;
         }
         return $query_vars;
     }
