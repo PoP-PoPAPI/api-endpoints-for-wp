@@ -195,7 +195,7 @@ class EndpointHandler
      */
     private function doesEndpointEndWith(string $uri, string $endpointURI): bool
     {
-        $endpointSuffix = '/'.trim($endpointURI, '/').'/';
-        return substr($uri, -1*strlen($endpointSuffix)) == $endpointSuffix;
+        $endpointSuffix = '/' . trim($endpointURI, '/') . '/';
+        return substr($uri, -1 * strlen($endpointSuffix)) == $endpointSuffix;
     }
 }
