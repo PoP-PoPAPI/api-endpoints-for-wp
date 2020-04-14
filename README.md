@@ -16,18 +16,7 @@ Add pretty permalinks for the PoP API endpoints, for WordPress
 Via Composer
 
 ``` bash
-composer require getpop/api-endpoints-for-wp dev-master
-```
-
-**Note:** Your `composer.json` file must have the configuration below to accept minimum stability `"dev"` (there are no releases for PoP yet, and the code is installed directly from the `master` branch):
-
-```javascript
-{
-    ...
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    ...
-}
+composer require getpop/api-endpoints-for-wp
 ```
 
 ([PoP](https://github.com/getpop/PoP) must be installed)
