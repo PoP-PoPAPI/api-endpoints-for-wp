@@ -28,6 +28,8 @@
         "getpop/api": "^1.0"
     },
     "require-dev": {
+        "getpop/api-rest": "dev-master",
+        "getpop/api-graphql": "dev-master",
         "phpunit/phpunit": ">=7.0",
         "squizlabs/php_codesniffer": "^3.0"
     },

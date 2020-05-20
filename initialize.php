@@ -1,2 +1,2 @@
 <?php
-\PoP\APIEndpointsForWP\Component::init();
+//\PoP\APIEndpointsForWP\Component::initialize();
