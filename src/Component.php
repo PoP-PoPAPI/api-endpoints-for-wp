@@ -22,6 +22,19 @@ class Component extends AbstractComponent
     }
 
     /**
+     * All conditional component classes that this component depends upon, to initialize them
+     *
+     * @return array
+     */
+    public static function getDependedConditionalComponentClasses(): array
+    {
+        return [
+            \PoP\RESTAPI\Component::class,
+            \PoP\GraphQLAPI\Component::class,
+        ];
+    }
+
+    /**
      * Boot component
      *
      * @return void
