@@ -22,12 +22,13 @@ composer require getpop/api-endpoints-for-wp
 
 ([PoP](https://github.com/getpop/PoP) must be installed)
 
-<!--
 ## Usage
 
+Initialize the component:
+
 ``` php
+\PoP\APIEndpointsForWP\Component::initialize();
 ```
--->
 
 ## Standards
 
