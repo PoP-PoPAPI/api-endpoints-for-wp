@@ -107,6 +107,8 @@ class EndpointHandler
     {
         // Set the params on the request, to emulate that they were added by the user
         $_REQUEST[\GD_URLPARAM_SCHEME] = \POP_SCHEME_API;
+        // Enable hooks
+        \do_action('EndpointHandler:setDoingAPI');
     }
     /**
      * Indicate this is a GraphQL request
@@ -119,6 +121,8 @@ class EndpointHandler
         $this->setDoingAPI();
         // Include qualified namespace here (instead of `use`) since we do didn't know if component is installed
         $_REQUEST[\GD_URLPARAM_DATASTRUCTURE] = \PoP\GraphQLAPI\DataStructureFormatters\GraphQLDataStructureFormatter::getName();
+        // Enable hooks
+        \do_action('EndpointHandler:setDoingGraphQL');
     }
     /**
      * Indicate this is a REST request
@@ -131,6 +135,8 @@ class EndpointHandler
         $this->setDoingAPI();
         // Include qualified namespace here (instead of `use`) since we do didn't know if component is installed
         $_REQUEST[\GD_URLPARAM_DATASTRUCTURE] = \PoP\RESTAPI\DataStructureFormatters\RESTDataStructureFormatter::getName();
+        // Enable hooks
+        \do_action('EndpointHandler:setDoingREST');
     }
 
     /**
