@@ -27,7 +27,9 @@ composer require getpop/api-endpoints-for-wp
 Initialize the component:
 
 ``` php
-\PoP\APIEndpointsForWP\Component::initialize();
+\PoP\Root\ComponentLoader::initializeComponents([
+    \PoP\APIEndpointsForWP\Component::class,
+]);
 ```
 
 ## Standards
