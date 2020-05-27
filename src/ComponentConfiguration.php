@@ -19,13 +19,15 @@ class ComponentConfiguration
         // Define properties
         $envVariable = Environment::GRAPHQL_API_ENDPOINT;
         $selfProperty = &self::$getGraphQLAPIEndpoint;
-        $defaultValue = 'api/graphql';
+        $defaultValue = '/api/graphql/';
+        $callback = [EndpointUtils::class, 'slashURI'];
 
         // Initialize property from the environment/hook
         self::maybeInitializeConfigurationValue(
             $envVariable,
             $selfProperty,
-            $defaultValue
+            $defaultValue,
+            $callback
         );
         return $selfProperty;
     }
@@ -35,13 +37,15 @@ class ComponentConfiguration
         // Define properties
         $envVariable = Environment::REST_API_ENDPOINT;
         $selfProperty = &self::$getRESTAPIEndpoint;
-        $defaultValue = 'api/rest';
+        $defaultValue = '/api/rest/';
+        $callback = [EndpointUtils::class, 'slashURI'];
 
         // Initialize property from the environment/hook
         self::maybeInitializeConfigurationValue(
             $envVariable,
             $selfProperty,
-            $defaultValue
+            $defaultValue,
+            $callback
         );
         return $selfProperty;
     }
@@ -51,13 +55,15 @@ class ComponentConfiguration
         // Define properties
         $envVariable = Environment::NATIVE_API_ENDPOINT;
         $selfProperty = &self::$getNativeAPIEndpoint;
-        $defaultValue = 'api';
+        $defaultValue = '/api/';
+        $callback = [EndpointUtils::class, 'slashURI'];
 
         // Initialize property from the environment/hook
         self::maybeInitializeConfigurationValue(
             $envVariable,
             $selfProperty,
-            $defaultValue
+            $defaultValue,
+            $callback
         );
         return $selfProperty;
     }
