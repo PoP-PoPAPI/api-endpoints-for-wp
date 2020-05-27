@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace PoP\APIEndpointsForWP;
 
 use PoP\Root\Component\AbstractComponent;
-use PoP\APIEndpointsForWP\EndpointHandler;
+use PoP\Root\Component\YAMLServicesTrait;
+use PoP\ComponentModel\Container\ContainerBuilderUtils;
+use PoP\ComponentModel\Facades\Instances\InstanceManagerFacade;
 
 /**
  * Initialize component
  */
 class Component extends AbstractComponent
 {
+    use YAMLServicesTrait;
+
     // const VERSION = '0.1.0';
 
     public static function getDependedComponentClasses(): array
@@ -41,6 +45,7 @@ class Component extends AbstractComponent
     {
         parent::doInitialize($configuration, $skipSchema);
         ComponentConfiguration::setConfiguration($configuration);
+        self::initYAMLServices(dirname(__DIR__));
     }
 
     /**
@@ -53,6 +58,10 @@ class Component extends AbstractComponent
         parent::beforeBoot();
 
         // Initialize services
-        (new EndpointHandler())->initialize();
+        $instanceManager = InstanceManagerFacade::getInstance();
+        $endpointHandlerServiceClasses = ContainerBuilderUtils::getServiceClassesUnderNamespace(__NAMESPACE__ . '\\EndpointHandlers');
+        foreach ($endpointHandlerServiceClasses as $serviceClass) {
+            $instanceManager->getInstance($serviceClass)->initialize();
+        }
     }
 }

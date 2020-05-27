@@ -2,24 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PoP\APIEndpointsForWP;
+namespace PoP\APIEndpointsForWP\EndpointHandlers;
 
 abstract class AbstractEndpointHandler extends \PoP\APIEndpoints\AbstractEndpointHandler
 {
-    /**
-     * Endpoint
-     *
-     * @var string
-     */
-    protected $endpoint;
-
-    /**
-     * Provide the endpoint
-     *
-     * @var string
-     */
-    abstract protected function getEndpoint(): string;
-
     /**
      * Initialize the client
      *
@@ -46,7 +32,33 @@ abstract class AbstractEndpointHandler extends \PoP\APIEndpoints\AbstractEndpoin
                 10,
                 1
             );
+            \add_action(
+                'parse_request',
+                [$this, 'parseRequest']
+            );
         }
+    }
+
+    /**
+     * If the endpoint for the client is requested, do something
+     *
+     * @return void
+     */
+    public function parseRequest(): void
+    {
+        if ($this->isEndpointRequested()) {
+            $this->executeEndpoint();
+        }
+    }
+
+    /**
+     * Execute the endpoint. Function to override
+     *
+     * @return void
+     */
+    protected function executeEndpoint(): void
+    {
+        // Do nothing here, override
     }
 
     /**

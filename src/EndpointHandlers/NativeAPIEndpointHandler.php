@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PoP\APIEndpointsForWP\EndpointHandlers;
+
+use PoP\APIEndpointsForWP\EndpointHandlers\AbstractEndpointHandler;
+use PoP\APIEndpointsForWP\ComponentConfiguration;
+
+class NativeAPIEndpointHandler extends AbstractEndpointHandler
+{
+    /**
+     * Initialize the endpoints
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        if ($this->isNativeAPIEnabled()) {
+            parent::initialize();
+        }
+    }
+
+    /**
+     * Provide the endpoint
+     *
+     * @var string
+     */
+    protected function getEndpoint(): string
+    {
+        return ComponentConfiguration::getNativeAPIEndpoint();
+    }
+
+    /**
+     * Check if the PoP API has been enabled
+     *
+     * @return boolean
+     */
+    protected function isNativeAPIEnabled(): bool
+    {
+        return class_exists('\PoP\API\Component') && \PoP\API\Component::isEnabled();
+    }
+
+    /**
+     * Indicate this is an API request
+     *
+     * @return void
+     */
+    protected function executeEndpoint(): void
+    {
+        // Set the params on the request, to emulate that they were added by the user
+        $_REQUEST[\GD_URLPARAM_SCHEME] = \POP_SCHEME_API;
+        // Enable hooks
+        \do_action('EndpointHandler:setDoingAPI');
+    }
+}
