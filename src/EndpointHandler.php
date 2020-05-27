@@ -48,11 +48,11 @@ class EndpointHandler
         /**
          * Register the endpoints
          */
-        add_action(
+        \add_action(
             'init',
             [$this, 'addRewriteEndpoints']
         );
-        add_filter(
+        \add_filter(
             'query_vars',
             [$this, 'addQueryVar'],
             10,
@@ -62,7 +62,7 @@ class EndpointHandler
         /**
          * Process the request to find out if it is any of the endpoints
          */
-        add_action(
+        \add_action(
             'parse_request',
             [$this, 'parseRequest']
         );
@@ -165,13 +165,13 @@ class EndpointHandler
     public function addRewriteEndpoints()
     {
         if (!empty($this->graphQLAPIEndpoint)) {
-            add_rewrite_endpoint($this->graphQLAPIEndpoint, EP_ALL);
+            \add_rewrite_endpoint($this->graphQLAPIEndpoint, EP_ALL);
         }
         if (!empty($this->restAPIEndpoint)) {
-            add_rewrite_endpoint($this->restAPIEndpoint, EP_ALL);
+            \add_rewrite_endpoint($this->restAPIEndpoint, EP_ALL);
         }
         if (!empty($this->nativeAPIEndpoint)) {
-            add_rewrite_endpoint($this->nativeAPIEndpoint, EP_ALL);
+            \add_rewrite_endpoint($this->nativeAPIEndpoint, EP_ALL);
         }
     }
 
