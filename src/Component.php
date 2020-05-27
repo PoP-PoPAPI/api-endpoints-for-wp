@@ -35,6 +35,15 @@ class Component extends AbstractComponent
     }
 
     /**
+     * Initialize services
+     */
+    protected static function doInitialize(array $configuration = [], bool $skipSchema = false): void
+    {
+        parent::doInitialize($configuration, $skipSchema);
+        ComponentConfiguration::setConfiguration($configuration);
+    }
+
+    /**
      * Boot component
      *
      * @return void
