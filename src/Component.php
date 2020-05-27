@@ -17,7 +17,7 @@ class Component extends AbstractComponent
     public static function getDependedComponentClasses(): array
     {
         return [
-            \PoP\API\Component::class,
+            \PoP\APIEndpoints\Component::class,
         ];
     }
 
@@ -53,6 +53,6 @@ class Component extends AbstractComponent
         parent::beforeBoot();
 
         // Initialize services
-        (new EndpointHandler())->init();
+        (new EndpointHandler())->initialize();
     }
 }

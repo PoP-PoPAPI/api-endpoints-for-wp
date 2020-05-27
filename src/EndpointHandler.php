@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PoP\APIEndpointsForWP;
 
-use PoP\APIEndpointsForWP\EndpointUtils;
+use PoP\APIEndpoints\EndpointUtils;
 use PoP\APIEndpointsForWP\ComponentConfiguration;
 
 class EndpointHandler
@@ -33,7 +33,7 @@ class EndpointHandler
      *
      * @return void
      */
-    public function init(): void
+    public function initialize(): void
     {
         if ($this->isGraphQLAPIEnabled()) {
             $this->graphQLAPIEndpoint = EndpointUtils::slashURI(

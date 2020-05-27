@@ -25,7 +25,7 @@
     ],
     "require": {
         "php" : "~7.1",
-        "getpop/api": "^1.0"
+        "getpop/api-endpoints": "dev-master"
     },
     "require-dev": {
         "getpop/api-rest": "dev-master",

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PoP\APIEndpointsForWP;
 
 use PoP\ComponentModel\ComponentConfiguration\ComponentConfigurationTrait;
+use PoP\APIEndpoints\EndpointUtils;
 
 class ComponentConfiguration
 {
