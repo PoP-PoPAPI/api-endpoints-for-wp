@@ -164,20 +164,38 @@ class EndpointHandler
     }
 
     /**
+     * If use full permalink, the endpoint must be the whole URL.
+     * Otherwise, it can be attached at the end of some other URI (eg: a custom post)
+     *
+     * @return boolean
+     */
+    protected function useFullPermalink(): bool
+    {
+        return false;
+    }
+
+    /**
      * Add the endpoints to WordPress
      *
      * @return void
      */
     public function addRewriteEndpoints()
     {
+        /**
+         * The mask indicates where to apply the endpoint rewriting
+         * @see https://codex.wordpress.org/Rewrite_API/add_rewrite_endpoint
+         */
+        $mask = $this->useFullPermalink() ? constant('EP_ROOT') : constant('EP_ALL');
+
+        // The endpoint passed to `add_rewrite_endpoint` cannot have "/" on either end, or it doesn't work
         if (!empty($this->graphQLAPIEndpoint)) {
-            \add_rewrite_endpoint($this->graphQLAPIEndpoint, constant('EP_ALL'));
+            \add_rewrite_endpoint(trim($this->graphQLAPIEndpoint, '/'), $mask);
         }
         if (!empty($this->restAPIEndpoint)) {
-            \add_rewrite_endpoint($this->restAPIEndpoint, constant('EP_ALL'));
+            \add_rewrite_endpoint(trim($this->restAPIEndpoint, '/'), $mask);
         }
         if (!empty($this->nativeAPIEndpoint)) {
-            \add_rewrite_endpoint($this->nativeAPIEndpoint, constant('EP_ALL'));
+            \add_rewrite_endpoint(trim($this->nativeAPIEndpoint, '/'), $mask);
         }
     }
 
