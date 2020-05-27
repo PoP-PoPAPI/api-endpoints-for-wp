@@ -36,13 +36,19 @@ class EndpointHandler
     public function init(): void
     {
         if ($this->isGraphQLAPIEnabled()) {
-            $this->graphQLAPIEndpoint = ComponentConfiguration::getGraphQLAPIEndpoint();
+            $this->graphQLAPIEndpoint = EndpointUtils::slashURI(
+                ComponentConfiguration::getGraphQLAPIEndpoint()
+            );
         }
         if ($this->isRESTAPIEnabled()) {
-            $this->restAPIEndpoint = ComponentConfiguration::getRESTAPIEndpoint();
+            $this->restAPIEndpoint = EndpointUtils::slashURI(
+                ComponentConfiguration::getRESTAPIEndpoint()
+            );
         }
         if ($this->isNativeAPIEnabled()) {
-            $this->nativeAPIEndpoint = ComponentConfiguration::getNativeAPIEndpoint();
+            $this->nativeAPIEndpoint = EndpointUtils::slashURI(
+                ComponentConfiguration::getNativeAPIEndpoint()
+            );
         }
 
         /**
@@ -147,12 +153,12 @@ class EndpointHandler
     public function parseRequest(): void
     {
         // Check if the URL ends with either /api/graphql/ or /api/rest/ or /api/
-        $uri = EndpointUtils::getSlashedURI();
-        if (!empty($this->graphQLAPIEndpoint) && $this->doesEndpointEndWith($uri, $this->graphQLAPIEndpoint)) {
+        $uri = EndpointUtils::removeMarkersFromURI($_SERVER['REQUEST_URI']);
+        if (!empty($this->graphQLAPIEndpoint) && EndpointUtils::doesURIEndWith($uri, $this->graphQLAPIEndpoint)) {
             $this->setDoingGraphQL();
-        } elseif (!empty($this->restAPIEndpoint) && $this->doesEndpointEndWith($uri, $this->restAPIEndpoint)) {
+        } elseif (!empty($this->restAPIEndpoint) && EndpointUtils::doesURIEndWith($uri, $this->restAPIEndpoint)) {
             $this->setDoingREST();
-        } elseif (!empty($this->nativeAPIEndpoint) && $this->doesEndpointEndWith($uri, $this->nativeAPIEndpoint)) {
+        } elseif (!empty($this->nativeAPIEndpoint) && EndpointUtils::doesURIEndWith($uri, $this->nativeAPIEndpoint)) {
             $this->setDoingAPI();
         }
     }
@@ -165,13 +171,13 @@ class EndpointHandler
     public function addRewriteEndpoints()
     {
         if (!empty($this->graphQLAPIEndpoint)) {
-            \add_rewrite_endpoint($this->graphQLAPIEndpoint, EP_ALL);
+            \add_rewrite_endpoint($this->graphQLAPIEndpoint, constant('EP_ALL'));
         }
         if (!empty($this->restAPIEndpoint)) {
-            \add_rewrite_endpoint($this->restAPIEndpoint, EP_ALL);
+            \add_rewrite_endpoint($this->restAPIEndpoint, constant('EP_ALL'));
         }
         if (!empty($this->nativeAPIEndpoint)) {
-            \add_rewrite_endpoint($this->nativeAPIEndpoint, EP_ALL);
+            \add_rewrite_endpoint($this->nativeAPIEndpoint, constant('EP_ALL'));
         }
     }
 
@@ -193,18 +199,5 @@ class EndpointHandler
             $query_vars[] = $this->nativeAPIEndpoint;
         }
         return $query_vars;
-    }
-
-    /**
-     * Indicate if the URI ends with the given endpoint
-     *
-     * @param string $uri
-     * @param string $endpointURI
-     * @return boolean
-     */
-    private function doesEndpointEndWith(string $uri, string $endpointURI): bool
-    {
-        $endpointSuffix = '/' . trim($endpointURI, '/') . '/';
-        return substr($uri, -1 * strlen($endpointSuffix)) == $endpointSuffix;
     }
 }
