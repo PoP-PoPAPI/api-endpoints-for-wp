@@ -62,14 +62,16 @@ abstract class AbstractEndpointHandler extends \PoP\APIEndpoints\AbstractEndpoin
     }
 
     /**
-     * If use full permalink, the endpoint must be the whole URL.
-     * Otherwise, it can be attached at the end of some other URI (eg: a custom post)
+     * The mask indicates where to apply the endpoint rewriting
+     * @see https://codex.wordpress.org/Rewrite_API/add_rewrite_endpoint
+     *
+     * Using EP_ROOT means that whole URL must match the endpoint.
      *
      * @return boolean
      */
-    protected function useFullPermalink(): bool
+    protected function getRewriteMask(): int
     {
-        return false;
+        return $this->doesEndpointMatchWholeURL() ? constant('EP_ROOT') : constant('EP_ALL');
     }
 
     /**
@@ -79,14 +81,8 @@ abstract class AbstractEndpointHandler extends \PoP\APIEndpoints\AbstractEndpoin
      */
     public function addRewriteEndpoints()
     {
-        /**
-         * The mask indicates where to apply the endpoint rewriting
-         * @see https://codex.wordpress.org/Rewrite_API/add_rewrite_endpoint
-         */
-        $mask = $this->useFullPermalink() ? constant('EP_ROOT') : constant('EP_ALL');
-
         // The endpoint passed to `add_rewrite_endpoint` cannot have "/" on either end, or it doesn't work
-        \add_rewrite_endpoint(trim($this->endpoint, '/'), $mask);
+        \add_rewrite_endpoint(trim($this->endpoint, '/'), $this->getRewriteMask());
     }
 
     /**
