@@ -38,7 +38,10 @@ class RESTEndpointHandler extends AbstractEndpointHandler
      */
     protected function isRESTAPIEnabled(): bool
     {
-        return class_exists('\PoP\RESTAPI\Component') && \PoP\RESTAPI\Component::isEnabled();
+        return
+            class_exists('\PoP\RESTAPI\Component')
+            && \PoP\RESTAPI\Component::isEnabled()
+            && !ComponentConfiguration::isRESTAPIEndpointDisabled();
     }
 
     /**
