@@ -28,14 +28,8 @@
         "getpop/api-endpoints": "dev-master"
     },
     "require-dev": {
-        "getpop/api-rest": "dev-master",
-        "getpop/api-graphql": "dev-master",
         "phpunit/phpunit": ">=7.0",
         "squizlabs/php_codesniffer": "^3.0"
-    },
-    "suggest": {
-        "getpop/api-rest": "Provides endpoints for the REST API",
-        "getpop/api-graphql": "Provides endpoints for the GraphQL API"
     },
     "autoload": {
         "psr-4": {
