@@ -36,8 +36,28 @@ abstract class AbstractEndpointHandler extends \PoP\APIEndpoints\AbstractEndpoin
                 'parse_request',
                 [$this, 'parseRequest']
             );
+
+            // // If it is a partial endpoint, we must add all the combinations of routes to Cortex
+            // if (!$this->doesEndpointMatchWholeURL()) {
+            //     \add_filter(
+            //         'route-endpoints',
+            //         [$this, 'getRouteEndpoints'],
+            //         10,
+            //         1
+            //     );
+            // }
         }
     }
+
+    // public function getRouteEndpoints(array $endpoints): array
+    // {
+    //     return array_merge(
+    //         $endpoints,
+    //         [
+    //             $this->endpoint
+    //         ]
+    //     );
+    // }
 
     /**
      * If the endpoint for the client is requested, do something
