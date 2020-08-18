@@ -6,6 +6,7 @@ namespace PoP\APIEndpointsForWP\EndpointHandlers;
 
 use PoP\APIEndpointsForWP\EndpointHandlers\AbstractEndpointHandler;
 use PoP\APIEndpointsForWP\ComponentConfiguration;
+use PoP\API\Response\Schemes as APISchemes;
 
 class NativeAPIEndpointHandler extends AbstractEndpointHandler
 {
@@ -51,7 +52,7 @@ class NativeAPIEndpointHandler extends AbstractEndpointHandler
     protected function executeEndpoint(): void
     {
         // Set the params on the request, to emulate that they were added by the user
-        $_REQUEST[\GD_URLPARAM_SCHEME] = \POP_SCHEME_API;
+        $_REQUEST[\GD_URLPARAM_SCHEME] = APISchemes::API;
         // Enable hooks
         \do_action('EndpointHandler:setDoingAPI');
     }
