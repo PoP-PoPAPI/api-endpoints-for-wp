@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace PoP\APIEndpointsForWP\EndpointHandlers;
 
 use PoP\API\Component;
-use PoP\ComponentModel\Constants\Params;
-use PoP\APIEndpointsForWP\ComponentConfiguration;
 use PoP\API\Response\Schemes as APISchemes;
+use PoP\APIEndpointsForWP\ComponentConfiguration;
+use PoP\ComponentModel\Constants\Params;
 
 class NativeAPIEndpointHandler extends AbstractEndpointHandler
 {
@@ -23,8 +23,6 @@ class NativeAPIEndpointHandler extends AbstractEndpointHandler
 
     /**
      * Provide the endpoint
-     *
-     * @var string
      */
     protected function getEndpoint(): string
     {
